@@ -32,10 +32,11 @@ TokenStoreMock.prototype.authenticate = function(token, uid, callback) {
 		var found = self._findRecord(uid, token);
 
 		if(found >= 0 && self.records[found].validTill >= Date.now()) {
-			callback(null, true, self.records[found].origin);
+            var origin = self.records[found].origin;
+			callback(null, true, origin === null ? '' : origin);
 		} else {
 			callback(null, false, null);
-		}	
+		}
 	}, 0)
 };
 
@@ -102,7 +103,7 @@ TokenStoreMock.prototype.length = function(callback) {
 TokenStoreMock.prototype._findRecord = function(uid, token) {
 	for (var i = this.records.length - 1; i >= 0; i--) {
 		var record = this.records[i];
-		if((!uid || record.uid == uid) && (!token || token === record.token)) {
+		if((!uid || record.uid === uid) && (!token || token === record.token)) {
 			return i;
 		}
 	};

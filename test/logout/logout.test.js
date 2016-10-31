@@ -22,26 +22,28 @@ describe('passwordless', function() {
 			passwordless.init(tokenStore);
 			passwordless.addDelivery(mocks.deliveryMockSend());
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
+
 			app.use(cookieParser());
-			app.use(expressSession( { secret: '42' } ));
+			app.use(expressSession( { secret: '42', resave: false, saveUninitialized:false } ));
 
 			app.use(passwordless.sessionSupport());
 			app.use(passwordless.acceptToken());
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId()),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 				
 			app.get('/restricted', passwordless.restricted(),
 				function(req, res){
-					res.send(200, 'authenticated');
+					res.status(200).send('authenticated');
 			});
 				
 			app.get('/logout', passwordless.logout(),
 				function(req, res){
-					res.send(200, (req.flash) ? req.flash('passwordless-success')[0] : '');
+					res.status(200).send((req.flash) ? req.flash('passwordless-success')[0] : '');
 			});
 
 			var agent = request.agent(app);
@@ -102,9 +104,10 @@ describe('passwordless', function() {
 			passwordless.init(tokenStore);
 			passwordless.addDelivery(mocks.deliveryMockSend());
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 			app.use(cookieParser());
-			app.use(expressSession( { secret: '42' } ));
+			app.use(expressSession( { secret: '42', resave: false, saveUninitialized:false } ));
 
 			app.use(flash());
 
@@ -113,17 +116,17 @@ describe('passwordless', function() {
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId()),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 				
 			app.get('/restricted', passwordless.restricted(),
 				function(req, res){
-					res.send(200, 'authenticated');
+					res.status(200).send('authenticated');
 			});
 				
 			app.get('/logout', passwordless.logout({ successFlash: 'That was successful' }),
 				function(req, res){
-					res.send(200, req.flash('passwordless-success')[0]);
+					res.status(200).send(req.flash('passwordless-success')[0]);
 			});
 
 			var agent = request.agent(app);
@@ -164,26 +167,27 @@ describe('passwordless', function() {
 			passwordless.init(tokenStore);
 			passwordless.addDelivery(mocks.deliveryMockSend());
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 			app.use(cookieParser());
-			app.use(expressSession( { secret: '42' } ));
+			app.use(expressSession( { secret: '42', resave: false, saveUninitialized:false } ));
 
 			app.use(passwordless.sessionSupport());
 			app.use(passwordless.acceptToken());
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId()),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 				
 			app.get('/restricted', passwordless.restricted(),
 				function(req, res){
-					res.send(200, 'authenticated');
+					res.status(200).send('authenticated');
 			});
 				
 			app.get('/logout', passwordless.logout({ successFlash: 'That was successful' }),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			var agent = request.agent(app);
@@ -215,11 +219,11 @@ describe('passwordless', function() {
 			passwordless.init(new TokenStoreMock());
 
 			app.use(cookieParser());
-			app.use(expressSession( { secret: '42' } ));
+			app.use(expressSession( { secret: '42', resave: false, saveUninitialized:false } ));
 				
 			app.get('/logout', passwordless.logout(),
 				function(req, res){
-					res.send(200, 'logged out');
+					res.status(200).send('logged out');
 			});
 
 			var agent = request.agent(app);

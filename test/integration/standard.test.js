@@ -21,36 +21,37 @@ describe('passwordless', function() {
 			passwordless.init(new TokenStoreMock({integration:true}));
 			passwordless.addDelivery(mocks.deliveryMockSend());
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 			app.use(cookieParser());
-			app.use(expressSession({ secret: '42' }));
+			app.use(expressSession({ secret: '42', resave: false, saveUninitialized:false }));
 
 			app.use(passwordless.sessionSupport());
 			app.use(passwordless.acceptToken({ successRedirect: '/success' }));
 
 			app.get('/unrestricted',
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			app.get('/success', passwordless.restricted(),
 				function(req, res){
-					res.send(200, 'successful authentication');
+					res.status(200).send('successful authentication');
 			});
 
 			app.get('/restricted', passwordless.restricted(),
 				function(req, res){
-					res.send(200, 'restricted resource');
+					res.status(200).send('restricted resource');
 			});
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId()),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			app.get('/logout', passwordless.logout(),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			var agent = request.agent(app);

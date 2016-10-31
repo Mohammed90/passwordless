@@ -1,3 +1,88 @@
+# 1.1.2 (2016-10-22)
+
+Bugfixes:
+- FIX _generateNumberToken converts the generated number into a string
+
+# 1.1.1 (2016-03-05)
+
+Bugfixes:
+- N/A
+
+Features:
+- ADD pass of req object to the addDelivery callback
+
+Documentation:
+- ADD pass of req object to the addDelivery callback
+
+# 1.1.0 (2015-06-18)
+
+Bugfixes:
+- N/A
+
+Features:
+- ADD option.skipForceSessionSave to support cookie-session middleware
+- UPDATE to latest dependencies
+- UPDATE example to work with latest dependencies
+
+Documentation:
+- N/A
+
+# 1.0.9 (2015-02-14)
+
+Bugfixes:
+- N/A
+
+Features:
+- N/A
+
+Documentation:
+- Better documentation of all callbacks used in Passwordless
+- Clarification of Readme.md highlighting that req is passed to the callback
+
+# 1.0.8 (2014-11-26)
+
+Bugfixes:
+- N/A
+
+Features:
+- UPDATE res.send(status) to res.status.send() in line with Express API changes. Backwards compatible to Express 3.x
+
+Documentation:
+- N/A
+
+# 1.0.7 (2014-11-23)
+
+Bugfixes:
+- FIXED handling of UIDs as numbers can cause issues with MongoDB
+
+Features:
+- N/A
+
+Documentation:
+- N/A
+
+# 1.0.6 (2014-11-23)
+
+Bugfixes:
+- FIXED handling of allowGet for requestToken does not get tripped by request body data
+
+Features:
+- N/A
+
+Documentation:
+- N/A
+
+# 1.0.5 (2014-11-07)
+
+Bugfixes:
+- N/A
+
+Features:
+- ADD addDelivery options.numberToken to generate number-based tokens
+
+Documentation:
+- Small update to include numberToken
+
 # 1.0.4 (2014-10-29)
 
 Bugfixes:

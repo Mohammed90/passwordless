@@ -22,21 +22,22 @@ describe('passwordless', function() {
 			passwordless.addDelivery('short', mocks.deliveryMockSend('short'), { ttl: 100 });
 			passwordless.addDelivery('long', mocks.deliveryMockSend('long'));
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 			app.use(cookieParser());
-			app.use(expressSession({ secret: '42' }));
+			app.use(expressSession({ secret: '42', resave: false, saveUninitialized:false }));
 
 			app.use(passwordless.sessionSupport());
 			app.use(passwordless.acceptToken());
 
 			app.get('/restricted', passwordless.restricted(),
 				function(req, res){
-					res.send(200, 'authenticated');
+					res.status(200).send('authenticated');
 			});
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId()),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			var agent1 = request.agent(app);

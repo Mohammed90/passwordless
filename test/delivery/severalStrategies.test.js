@@ -19,14 +19,15 @@ describe('passwordless', function() {
 			var passwordless = new Passwordless();
 			passwordless.init(new TokenStoreMock());
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 
 			passwordless.addDelivery('email', mocks.deliveryMockSend('email'));
 			passwordless.addDelivery('sms', mocks.deliveryMockSend('sms'));
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId()),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			var agent1 = request.agent(app);
@@ -86,14 +87,15 @@ describe('passwordless', function() {
 			var passwordless = new Passwordless();
 			passwordless.init(new TokenStoreMock());
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 
 			passwordless.addDelivery('email', mocks.deliveryMockSend('email'));
 			passwordless.addDelivery('sms', mocks.deliveryMockSend('sms'));
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId(), {deliveryField: 'method'}),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			var agent = request.agent(app);

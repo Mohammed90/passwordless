@@ -22,9 +22,10 @@ describe('passwordless', function() {
 			passwordless.init(store);
 			passwordless.addDelivery(mocks.deliveryMockSend());
 
-			app.use(bodyParser());
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 			app.use(cookieParser());
-			app.use(expressSession({ secret: '42' }));
+			app.use(expressSession({ secret: '42', resave: false, saveUninitialized:false }));
 
 			app.use(passwordless.sessionSupport());
 			app.use(passwordless.acceptToken( { enableOriginRedirect: true } ));
@@ -33,22 +34,22 @@ describe('passwordless', function() {
 
 			app.get('/restricted/demo',
 				function(req, res){
-					res.send(200, 'authenticated');
+					res.status(200).send('authenticated');
 			});
 
 			app.get('/home',
 				function(req, res){
-					res.send(200, 'homepage');
+					res.status(200).send('homepage');
 			});
 
 			app.get('/login',
 				function(req, res){
-					res.send(200, req.query.origin);
+					res.status(200).send(req.query.origin);
 			});
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId(), { originField: 'origin' }),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			var agent = request.agent(app);
@@ -76,7 +77,7 @@ describe('passwordless', function() {
 			it('should have stored and sent a token', function () {
 				var lastRecord = store.lastRecord();
 				expect(lastRecord).to.exist;
-				expect(lastRecord.uid).to.equal(mocks.alice().id);
+				expect(lastRecord.uid).to.equal(mocks.alice().id.toString());
 				expect(lastRecord.origin).to.equal('/restricted/demo');
 
 				expect(mocks.delivered.length).to.equal(1);

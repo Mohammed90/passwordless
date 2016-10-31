@@ -12,7 +12,7 @@ var Mocks = require('../mock/mocks.js');
 
 describe('passwordless', function() {
 	describe('integration', function() {
-		describe('standard', function() {
+		describe('two-step-auth', function() {
 
 			var mocks = new Mocks();
 
@@ -20,38 +20,39 @@ describe('passwordless', function() {
 			var passwordless = new Passwordless();
 			passwordless.init(new TokenStoreMock({integration:true}));
 			passwordless.addDelivery(mocks.deliveryMockSend());
-
-			app.use(bodyParser());
+			
+			app.use(bodyParser.json());
+			app.use(bodyParser.urlencoded({extended: false}));
 			app.use(cookieParser());
-			app.use(expressSession({ secret: '42' }));
+			app.use(expressSession({ secret: '42', resave: false, saveUninitialized:false }));
 
 			app.use(passwordless.sessionSupport());
 
 			app.get('/unrestricted',
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			app.get('/restricted', passwordless.restricted(),
 				function(req, res){
-					res.send(200, 'authenticated');
+					res.status(200).send('authenticated');
 			});
 
 			app.post('/login', passwordless.requestToken(mocks.getUserId()),
 				function(req, res){
-					res.send(200, 'We\'ve just send an SMS to ' + 
+					res.status(200).send('We\'ve just send an SMS to ' + 
 						req.body.user + ' for user: ' + req.passwordless.uidToAuth + 
 						'What\'s the token?');
 			});
 
 			app.post('/auth', passwordless.acceptToken({ allowPost: true }),
 				function(req, res) {
-					res.send(200, 'It\'s done. You are not auth\'ed');
+					res.status(200).send('It\'s done. You are not auth\'ed');
 			});
 
 			app.get('/logout', passwordless.logout(),
 				function(req, res){
-					res.send(200);
+					res.status(200).send();
 			});
 
 			var agent = request.agent(app);
